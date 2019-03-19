@@ -1,0 +1,1 @@
+Calculator project for the Odin Project. The objective of this project is create everything from scratch. 
