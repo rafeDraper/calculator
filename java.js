@@ -39,7 +39,7 @@ function factorial(input) {
 }
 ////// NOTE EQUAL FUNCTION
 
-let operate = (a,op,b) => {
+let equal = (a,op,b) => {
 	switch (op) {
 		case `+`:
 		return add(a,b);
@@ -54,8 +54,81 @@ let operate = (a,op,b) => {
 };
 
 
-// SECTION 
+// SECTION Manipulate the screen
 
+let smallscr = () => {
+	return document.querySelector(`#anotation`).textContent;
+}
+
+let prntSmallscr = (input) => {
+	document.querySelector(`#anotation`).textContent=input;
+}
+
+let bigscr = () => {
+	return document.querySelector(`#screen`).textContent;
+}
+
+let prntBigscr = (input) => {
+	if (input == "") {
+		document.querySelector(`#screen`).textContent = input
+	} else {
+		document.querySelector(`#screen`).textContent = fromatNum(input);
+	}
+}
+
+let fromatNum = (input) => {
+	let n = Number(input)
+	let value = n.toLocaleString("de-DE");
+	return value;
+}
+
+let reverseNum = (input) => {
+	return Number(input.replace(/[.,]/g,""));
+}
+
+let operator = document.getElementsByClassName("operator");
+for (let i = 0; i<operator.length; i++) {
+	operator[i].addEventListener('click', function() {
+		if(this.id=="clear") {
+			prntBigscr("0");
+			prntSmallscr("0");
+		}
+		else if(this.id=="delete") {
+			let output = reverseNum(bigscr()).toString();
+			if(output) { //its a number and its not empty
+				output = output.substr(0,output.length-1);
+				prntBigscr(output);
+			}
+		} else {
+			let output = bigscr();
+			let history = smallscr();
+			if(output != ""){
+				output = reverseNum(output);
+				history = history + output;
+			}
+			
+		}
+	});
+}
+
+
+let number = document.getElementsByClassName("key");
+for (let i = 0; i<number.length; i++) {
+	number[i].addEventListener('click', function() {
+		let output = reverseNum(bigscr());
+		if (output!=NaN) { //output a number
+			output=output+this.id;
+			prntBigscr(output);
+			
+		}
+	})
+}
+
+
+
+
+
+/* 
 document.addEventListener("click", function(e) {
 	const key = document.querySelector(`.key[data-key]`);
 	console.log(key)
@@ -64,4 +137,4 @@ document.addEventListener("click", function(e) {
 
 let disVal, disScr;
 
-disScr = document.querySelector(`.display`).textContent = "0"
+disScr = document.querySelector(`.display`).textContent = "0" */
