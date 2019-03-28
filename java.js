@@ -1,32 +1,31 @@
-
 // SECTION calculator functions
 
-function add (a,b) {
-	let sum = a+b;
+function add(a, b) {
+	let sum = a + b;
 	return sum;
 }
 
-function subtract (a,b) {
-	let subs = a-b;
-	return subs;	
+function subtract(a, b) {
+	let subs = a - b;
+	return subs;
 }
 
-function divide (a,b) {
-    let divi = a / b;
-    return divi;
+function divide(a, b) {
+	let divi = a / b;
+	return divi;
 }
 
-function sum (input) {
-		const addition = input.reduce((a, b) => a + b, 0);
-		return addition; 	
+function sum(input) {
+	const addition = input.reduce((a, b) => a + b, 0);
+	return addition;
 }
 
-function multiply (a,b) {
+function multiply(a, b) {
 	return a * b;
 }
 
-function power(a,b) {
-	return Math.pow(a,b)	
+function power(a, b) {
+	return Math.pow(a, b)
 };
 
 function factorial(input) {
@@ -39,102 +38,116 @@ function factorial(input) {
 }
 ////// NOTE EQUAL FUNCTION
 
-let equal = (a,op,b) => {
+let equal = (input) => {
 	switch (op) {
 		case `+`:
-		return add(a,b);
+			return add(a, b);
 		case `-`:
-		return subtract(a,b);
+			return subtract(a, b);
 		case `*`:
-		return multiply(a,b);
+			return multiply(a, b);
 		case `/`:
-		return divide(a,b);
+			return divide(a, b);
 
-	}	
+	}
 };
 
 
 // SECTION Manipulate the screen
 
-let smallscr = () => {
-	return document.querySelector(`#anotation`).textContent;
+let getHistory = () => {
+	return document.getElementById(`anotation`).innerText;
 }
 
-let prntSmallscr = (input) => {
-	document.querySelector(`#anotation`).textContent=input;
+
+let printHistory = (input) => {
+	document.getElementById(`anotation`).innerText = input;
 }
 
-let bigscr = () => {
-	return document.querySelector(`#screen`).textContent;
+let getOutput = () => {
+	return document.getElementById(`screen`).innerText;
 }
 
-let prntBigscr = (input) => {
+let printOutput = (input) => {
 	if (input == "") {
-		document.querySelector(`#screen`).textContent = input
+		document.getElementById(`screen`).innerText = input
 	} else {
-		document.querySelector(`#screen`).textContent = fromatNum(input);
+		document.getElementById(`screen`).innerText = getFormattedNumber(input);
 	}
 }
 
-let fromatNum = (input) => {
+let getFormattedNumber = (input) => {
 	let n = Number(input)
 	let value = n.toLocaleString("de-DE");
 	return value;
 }
 
-let reverseNum = (input) => {
-	return Number(input.replace(/[.,]/g,""));
+let reverseNumberFormat = (input) => {
+	return Number(input.replace(/[.,]/g,''));
 }
 
-let operator = document.getElementsByClassName("operator");
-for (let i = 0; i<operator.length; i++) {
-	operator[i].addEventListener('click', function() {
-		if(this.id=="clear") {
-			prntBigscr("0");
-			prntSmallscr("0");
+var operator = document.getElementsByClassName("operator");
+for(var i =0;i<operator.length;i++){
+	operator[i].addEventListener('click',function(){
+		if(this.id=="clear"){
+			printHistory("");
+			printOutput("");
 		}
-		else if(this.id=="delete") {
-			let output = reverseNum(bigscr()).toString();
-			if(output) { //its a number and its not empty
-				output = output.substr(0,output.length-1);
-				prntBigscr(output);
+		else if(this.id=="delete"){
+			var output=reverseNumberFormat(getOutput()).toString();
+			if(output){//if output has a value
+				output= output.substr(0,output.length-1);
+				printOutput(output);
 			}
-		} else {
-			let output = bigscr();
-			let history = smallscr();
-			if(output != ""){
-				output = reverseNum(output);
-				history = history + output;
-			}
-			
 		}
+		else{
+			var output=getOutput();
+			var history=getHistory();
+			if(output==""&&history!=""){
+				if(isNaN(history[history.length-1])){
+					history= history.substr(0,history.length-1);
+				}
+			}
+			if(output!="" || history!=""){
+				output= output==""?output:reverseNumberFormat(output);
+				history=history+output;
+				console.log(history)
+				if(this.id=="="){
+					var result=eval(history);
+					printOutput(result);
+					printHistory("");
+				}
+				else{
+					history=history+this.id;
+					printHistory(history);
+					printOutput("");
+				}
+			}
+		}
+		
 	});
 }
 
 
 let number = document.getElementsByClassName("key");
-for (let i = 0; i<number.length; i++) {
-	number[i].addEventListener('click', function() {
-		let output = reverseNum(bigscr());
-		if (output!=NaN) { //output a number
-			output=output+this.id;
-			prntBigscr(output);
-			
+for (let i = 0; i < number.length; i++) {
+	number[i].addEventListener('click', function () {
+		let output = reverseNumberFormat(getOutput());
+		if (output != NaN) { //output a number
+			output = output + this.id;
+			printOutput(output);
+
 		}
 	})
 }
 
-
-
-
-
-/* 
-document.addEventListener("click", function(e) {
-	const key = document.querySelector(`.key[data-key]`);
-	console.log(key)
+window.addEventListener('keydown', function(e) {
+	const key = document.querySelector(`button[data-key="${e.key}"]`);
+	if(!key) return;
+	key.click();
+	key.classList.add('playing');
+	setTimeout(RemoveClass, 100);
+	function RemoveClass() {
+		key.classList.remove('playing');
+	}
 });
-
-
-let disVal, disScr;
-
-disScr = document.querySelector(`.display`).textContent = "0" */
