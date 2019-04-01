@@ -1,17 +1,14 @@
 // SECTION calculator functions
 
-function add(a, b) {
-	let sum = a + b;
-	return sum;
-}
+let add = (a, b) => parseFloat(a) + parseFloat(b);
 
 function subtract(a, b) {
-	let subs = a - b;
+	let subs = parseFloat(a) - parseFloat(b);
 	return subs;
 }
 
 function divide(a, b) {
-	let divi = a / b;
+	let divi = parseFloat(a) / parseFloat(b);
 	return divi;
 }
 
@@ -21,7 +18,7 @@ function sum(input) {
 }
 
 function multiply(a, b) {
-	return a * b;
+	return parseFloat(a) * parseFloat(b);
 }
 
 function power(a, b) {
@@ -86,48 +83,53 @@ let getFormattedNumber = (input) => {
 }
 
 let reverseNumberFormat = (input) => {
-	return Number(input.replace(/[.,]/g,''));
+	return Number(input.replace(/[.,]/g, ''));
 }
 
 let operator = document.getElementsByClassName("operator");
-for(let i =0;i<operator.length;i++){
-	operator[i].addEventListener('click',function(){
-		if(this.id=="clear"){
+for (let i = 0; i < operator.length; i++) {
+	operator[i].addEventListener('click', function () {
+
+		if (this.id == "clear") {
 			printHistory("");
 			printOutput("");
-		}
-		else if(this.id =="delete"){
-			let output=reverseNumberFormat(getOutput()).toString();
-			if(output){//if output has a value
-				output= output.substr(0,output.length-1);
+
+		} else if (this.id == "delete") {
+			let output = reverseNumberFormat(getOutput()).toString();
+			if (output) { //if output has a value
+				output = output.substr(0, output.length - 1);
 				printOutput(output);
 			}
-		}
-		else{
+		} else {
 			let output = getOutput();
 			let history = getHistory();
-			if(output == "" && history != ""){
-				if(isNaN(history[history.length-1])){
-					history= history.substr(0,history.length-1);
-				}
-			}
-			if(output != "" || history != ""){
-				output= output==""?output:reverseNumberFormat(output);
-				history=history+output;
-				console.log(history)
-				if(this.id=="="){
-					var result=eval(history);
+			//if (output == "" && history != "") {
+			//	if (isNaN(history[history.length - 1])) {
+			//		history = history.substr(0, history.length - 1);
+			//	}
+			//}
+			if (output != "" || history != "") {
+				output = output == "" ? output : reverseNumberFormat(output);
+				history = history + output;
+
+				if (this.id == "=") {
+					let dispRes = history.split("")
+					let firstDigit = dispRes.slice(0,1)
+					let operator = history.slice(1,2)
+					let secondDigit = history.slice(2)
+					console.log(dispRes)
+					var result = equal(firstDigit, operator, secondDigit);
 					printOutput(result);
 					printHistory("");
-				}
-				else{
-					history=history+this.id;
+
+				} else {
+					history = history + this.id;
 					printHistory(history);
 					printOutput("");
 				}
 			}
 		}
-		
+
 	});
 }
 
@@ -144,12 +146,13 @@ for (let i = 0; i < number.length; i++) {
 	})
 }
 
-window.addEventListener('keydown', function(e) {
+window.addEventListener('keydown', function (e) {
 	const key = document.querySelector(`button[data-key="${e.key}"]`);
-	if(!key) return;
+	if (!key) return;
 	key.click();
 	key.classList.add('playing');
 	setTimeout(RemoveClass, 100);
+
 	function RemoveClass() {
 		key.classList.remove('playing');
 	}
