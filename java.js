@@ -103,21 +103,21 @@ for (let i = 0; i < operator.length; i++) {
 		} else {
 			let output = getOutput();
 			let history = getHistory();
-			//if (output == "" && history != "") {
-			//	if (isNaN(history[history.length - 1])) {
-			//		history = history.substr(0, history.length - 1);
-			//	}
-			//}
+			if (output == "" && history != "") {
+				if (isNaN(history[history.length - 1])) {
+					history = history.substr(0, history.length - 1);
+				}
+			}
 			if (output != "" || history != "") {
 				output = output == "" ? output : reverseNumberFormat(output);
 				history = history + output;
 
 				if (this.id == "=") {
-					let dispRes = history.split("")
-					let firstDigit = dispRes.slice(0,1)
-					let operator = history.slice(1,2)
-					let secondDigit = history.slice(2)
-					console.log(dispRes)
+					
+					let firstDigit = history.match(/^\d+/g).toString();
+					let operator = history.match(/\D/g).toString();
+					let secondDigit = history.match(/\D\d+/g).toString().slice(1);
+					
 					var result = equal(firstDigit, operator, secondDigit);
 					printOutput(result);
 					printHistory("");
