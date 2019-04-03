@@ -112,7 +112,7 @@ for (let i = 0; i < operator.length; i++) {
 				output = output == "" ? output : reverseNumberFormat(output);
 				history = history + output;
 
-				if (this.id == "=") {
+				if (this.id == "=") { // Keep working on this section
 					
 					let firstDigit = history.match(/^\d+/g).toString();
 					let operator = history.match(/\D/g).toString();
